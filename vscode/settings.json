@@ -1,0 +1,41 @@
+{
+    "terminal.integrated.shell.osx": "zsh",
+    "terminal.integrated.fontSize": 12,
+    "terminal.integrated.cursorBlinking": true,
+    "terminal.integrated.cursorStyle": "line",
+    "editor.rulers": [
+        150
+    ],
+    "editor.largeFileOptimizations": false,
+    "editor.formatOnSave": true,
+    "editor.renderWhitespace": "all",
+    "workbench.startupEditor": "readme",
+    "telemetry.enableTelemetry": false,
+    "telemetry.enableCrashReporter": false,
+    "window.zoomLevel": 0,
+    "rust-client.channel": "stable",
+    "rust-analyzer.inlayHints.typeHints": false,
+    "rust-analyzer.inlayHints.parameterHints": false,
+    "go.testFlags": [
+        "-v",
+        "-count=1"
+    ],
+    "go.useLanguageServer": true,
+    "workbench.colorTheme": "Dark Horizon",
+    "terminal.external.osxExec": "iTerm.app",
+    "todohighlight.include": [
+        "**/*.js",
+        "**/*.jsx",
+        "**/*.ts",
+        "**/*.tsx",
+        "**/*.html",
+        "**/*.php",
+        "**/*.css",
+        "**/*.rs",
+        "**/*.sol",
+        "**/*.go",
+        "**/*.py",
+        "**/*.scss"
+    ],
+    "terminal.integrated.fontFamily": "MesloLGS NF"
+}

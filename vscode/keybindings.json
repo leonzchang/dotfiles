@@ -1,0 +1,9 @@
+[
+    {
+        "key": "shift+cmd+a",
+        "command": "workbench.action.terminal.sendSequence",
+        "args": {
+            "text": "cargo fmt && cargo build\u000D"
+        }
+    }
+]
