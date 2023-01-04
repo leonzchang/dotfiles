@@ -80,7 +80,7 @@ install_languages() {
 }
 
 install_tools() {
-	brew install thefuck tmux kubectx discord rectangle hub google-cloud-sdk visual-studio-code google-chrome nvm android-commandlinetools gh bat exa peco ganache || true
+	brew install thefuck tmux kubectx discord rectangle hub google-cloud-sdk visual-studio-code google-chrome nvm android-commandlinetools gh bat exa peco ganache kdash || true
 
 	# vscode setting
 	rm ~/Library/Application\ Support/Code/User/keybindings.json
