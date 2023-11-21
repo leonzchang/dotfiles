@@ -111,11 +111,15 @@ install_languages() {
 }
 
 install_tools() {
-	#  not handling discord, google-cloud-sdk, google-chrome, nvm, android-commandlinetools, ganache, kdash on Lunix currently
+	#  not handling discord, google-cloud-sdk, google-chrome, nvm, android-commandlinetools, ganache on Lunix currently
 	if [ "$OS" == "Darwin" ]; then
 		brew install thefuck tmux kubectx discord rectangle hub google-cloud-sdk visual-studio-code google-chrome nvm android-commandlinetools gh bat eza peco ganache kdash || true
 	elif [ "$OS" == "Linux" ]; then
-		sudo apt install tmux kubectx hub code gh bat eza peco
+		sudo apt install tmux kubectx hub code gh bat peco
+		# install nvm
+		curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
+		# install eza kdash
+		cargo install eza kdash
 	fi
 
 

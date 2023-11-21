@@ -10,4 +10,4 @@ sudo ./install.sh
 # TODO
 - not handling on Linux
     - languages: `go, node, yarn, temurin`
-    - tools:`discord, google-cloud-sdk, google-chrome, nvm, android-commandlinetools, ganache, kdash`
+    - tools:`discord, google-cloud-sdk, google-chrome, android-commandlinetools, ganache`
