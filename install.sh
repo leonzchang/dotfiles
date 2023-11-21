@@ -54,12 +54,14 @@ install_shell() {
 		sudo apt install zsh toilet
 	fi
 
-	#set zsh to default, newer macos version has already set zsh to default
+	# set zsh to default, newer macos version has already set zsh to default
 	#chsh -s $(which zsh)
 
-	#install oh-my-zsh
-	sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-
+	# install oh-my-zsh
+	# MacOs need install oh-my-zsh, Linux already install it by apt install zsh
+	if [ "$OS" == "Darwin" ]; then
+		sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+	fi
 	#zsh-autosuggestions
 	git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 
@@ -102,11 +104,11 @@ install_languages() {
 }
 
 install_tools() {
-	#  not handling discord, google-cloud-sdk, google-chrome, nvm, android-commandlinetools, ganache on Lunix currently
+	#  not handling discord, google-cloud-sdk, google-chrome, nvm, android-commandlinetools, ganache, kdash on Lunix currently
 	if [ "$OS" == "Darwin" ]; then
 		brew install thefuck tmux kubectx discord rectangle hub google-cloud-sdk visual-studio-code google-chrome nvm android-commandlinetools gh bat eza peco ganache kdash || true
 	elif [ "$OS" == "Linux" ]; then
-		sudo apt install tmux kubectx hub code gh bat eza peco ganache kdash
+		sudo apt install tmux kubectx hub code gh bat eza peco
 	fi
 
 
