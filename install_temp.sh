@@ -6,12 +6,14 @@ ROOT_PATH=$(pwd -P)
 
 main() {
 	downloader --check
-	#get_arch
-	#ARCH="$RETVAL"
+
+	get_arch
+	ARCH="$RETVAL"
 
 	install_homebrew
 	install_terminal
 	install_shell
+	install_neovim
 	install_languages
 	install_tools
 	setup_git
@@ -22,42 +24,54 @@ install_homebrew() {
 		info "Installing homebrew"
 		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 	fi
-
-	# add homebrew to ~/.bashrc
-	echo "export PATH=/opt/homebrew/bin:$PATH" >> ~/.bashrc
-	source ~/.bashrc
 }
 
 install_terminal() {
-	# install iterm2
-	brew install iterm2 || true
+	# install alacritty terminal and terminfo
+	brew install alacritty || true
+	ensure downloader https://raw.githubusercontent.com/alacritty/alacritty/master/extra/alacritty.info /Applications/Alacritty.app/Contents/Resources/alacritty.info
+	info "setting terminal tic, sudo required"
+	sudo tic -xe alacritty,alacritty-direct /Applications/Alacritty.app/Contents/Resources/alacritty.info
+	info "configuring terminal"
+	sym_link $ROOT_PATH/.alacritty.yml ~/.alacritty.yml
+	if [[ $ARCH == *"darwin"* ]]; then
+		info "macOs detected, 'open' alacritty in finder to seed permissions"
+		open /Applications
+	fi
 }
 
 install_shell() {
 	# install environment tools and languages
-	brew install zsh toilet || true
+	brew install zsh zsh-completions || true
 	info "configuring shell"
+	chsh -s /usr/local/bin/zsh
 
-	#set zsh to default, newer macos version has already set zsh to default
-	#chsh -s $(which zsh)
+	# install and setup antibody zsh plugin bundler
+	brew install getantibody/tap/antibody || true
+	antibody bundle <.zsh_plugins.txt >~/.zsh_plugins.sh
+	antibody update
 
-	#install oh-my-zsh
-	sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+	# install powerlevel9k and nerdfonts
+	brew tap sambadevi/powerlevel9k
+	brew tap homebrew/cask-fonts
 
-	#zsh-autosuggestions
-	git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+	brew install powerlevel9k || true
+	brew install font-meslo-lg-nerd-font || true
+	brew install font-fira-code-nerd-font || true
+}
 
-    	#zshrc setting
-	cp  zshrc/newWorkspace/.zshrc ~/
-	
-	#add brew to Path
-	echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/leonz/.zprofile
-    	eval "$(/opt/homebrew/bin/brew shellenv)"
-	
+install_neovim() {
+	brew install neovim || true
+	brew install ripgrep fzf || true
+	info "configuring neovim"
+	sym_link $ROOT_PATH/nvim ~/.config/nvim
+	nvim --headless +PlugInstall +PlugClean +PlugUpdate +UpdateRemotePlugins +qall
+	# undo history path
+	mkdir -p ~/.vimdid
 }
 
 install_languages() {
-	brew install go node yarn temurin || true
+	brew install go node yarn || true
 
 	if ! which rustup >/dev/null 2>&1; then
 		curl https://sh.rustup.rs -sSf | sh -s -- -y
@@ -66,12 +80,12 @@ install_languages() {
 
 		# Rust toolchains and commands
 		rustup component add clippy
-		rustup target add aarch64-apple-ios x86_64-apple-ios
+		rustup target add aarch64-apple-ios armv7-apple-ios x86_64-apple-ios
 		rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android
 		rustup target add wasm32-unknown-unknown
 
 		# Install sccache
-		cargo install sccache
+		cargo install sccache --git https://github.com/paritytech/sccache.git
 	else
 		rustup update
 	fi
@@ -80,20 +94,12 @@ install_languages() {
 }
 
 install_tools() {
-	brew install thefuck tmux kubectx discord rectangle hub google-cloud-sdk visual-studio-code google-chrome nvm android-commandlinetools gh bat eza peco ganache kdash || true
+	brew install kubectx hub google-cloud-sdk visual-studio-code || true
 
-	# vscode setting
-	rm ~/Library/Application\ Support/Code/User/keybindings.json
-	rm ~/Library/Application\ Support/Code/User/settings.json
-	mkdir ~/Library/Application\ Support/Code/User
+	rm -rf ~/Library/Application\ Support/Code/User/keybindings.json
+	rm -rf ~/Library/Application\ Support/Code/User/settings.json
+	mkdir -p ~/Library/Application\ Support/Code/User
 	cp vscode/* ~/Library/Application\ Support/Code/User/
-
-	# tmux-conf setting
-	cp  tmux/.tmux.conf ~/
-	cp  tmux/.tmux.conf.local  ~/
-
-	# vim setting
-	cp vim/.vimrc ~/
 }
 
 setup_git() {
@@ -193,7 +199,7 @@ get_arch() {
 
 downloader() {
 	local _dld
-	if check_cmd curl; then	
+	if check_cmd curl; then
 		_dld=curl
 	elif check_cmd wget; then
 		_dld=wget

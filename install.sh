@@ -1,78 +1,86 @@
 #!/bin/bash
 set -e
 ROOT_PATH=$(pwd -P)
+OS=$(uname -s)
+
 
 #! https://dev.to/joaovitor/exa-instead-of-ls-1onl
 
 main() {
 	downloader --check
+	#get_arch
+	#ARCH="$RETVAL"
 
-	get_arch
-	ARCH="$RETVAL"
-
-	install_homebrew
+	install_pkgmanager
 	install_terminal
 	install_shell
-	install_neovim
 	install_languages
 	install_tools
 	setup_git
 }
 
-install_homebrew() {
-	if ! which brew >/dev/null 2>&1; then
-		info "Installing homebrew"
-		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+install_pkgmanager() {
+	if [ "$OS" == "Darwin" ]; then
+		# MacOS
+		if ! which brew >/dev/null 2>&1; then
+			info "Installing homebrew"
+			/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+
+			# add homebrew to ~/.bashrc
+			echo "export PATH=/opt/homebrew/bin:$PATH" >> ~/.bashrc
+			source ~/.bashrc
+		fi
+	elif [ "$OS" == "Linux" ]; then
+		# Linux
+    	sudo apt update	
+	else
+		echo "Unsupported operating system: $OS"
 	fi
 }
 
 install_terminal() {
-	# install alacritty terminal and terminfo
-	brew install alacritty || true
-	ensure downloader https://raw.githubusercontent.com/alacritty/alacritty/master/extra/alacritty.info /Applications/Alacritty.app/Contents/Resources/alacritty.info
-	info "setting terminal tic, sudo required"
-	sudo tic -xe alacritty,alacritty-direct /Applications/Alacritty.app/Contents/Resources/alacritty.info
-	info "configuring terminal"
-	sym_link $ROOT_PATH/.alacritty.yml ~/.alacritty.yml
-	if [[ $ARCH == *"darwin"* ]]; then
-		info "macOs detected, 'open' alacritty in finder to seed permissions"
-		open /Applications
+	# install iterm2 only if OS is MacOS
+	if [ "$OS" == "Darwin" ]; then
+		brew install iterm2 || true
 	fi
 }
 
 install_shell() {
 	# install environment tools and languages
-	brew install zsh zsh-completions || true
-	info "configuring shell"
-	chsh -s /usr/local/bin/zsh
+	if [ "$OS" == "Darwin" ]; then
+		brew install zsh toilet || true
+		info "configuring shell"
+	elif [ "$OS" == "Linux" ]; then
+		sudo apt install zsh toilet
+	fi
 
-	# install and setup antibody zsh plugin bundler
-	brew install getantibody/tap/antibody || true
-	antibody bundle <.zsh_plugins.txt >~/.zsh_plugins.sh
-	antibody update
+	#set zsh to default, newer macos version has already set zsh to default
+	#chsh -s $(which zsh)
 
-	# install powerlevel9k and nerdfonts
-	brew tap sambadevi/powerlevel9k
-	brew tap homebrew/cask-fonts
+	#install oh-my-zsh
+	sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
-	brew install powerlevel9k || true
-	brew install font-meslo-lg-nerd-font || true
-	brew install font-fira-code-nerd-font || true
-}
+	#zsh-autosuggestions
+	git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 
-install_neovim() {
-	brew install neovim || true
-	brew install ripgrep fzf || true
-	info "configuring neovim"
-	sym_link $ROOT_PATH/nvim ~/.config/nvim
-	nvim --headless +PlugInstall +PlugClean +PlugUpdate +UpdateRemotePlugins +qall
-	# undo history path
-	mkdir -p ~/.vimdid
+    	#zshrc setting
+	cp  zshrc/newWorkspace/.zshrc ~/
+	
+	#add brew to Path
+	if [ "$OS" == "Darwin" ]; then
+		echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/leonz/.zprofile
+			eval "$(/opt/homebrew/bin/brew shellenv)"
+	fi
+	
 }
 
 install_languages() {
-	brew install go node yarn || true
+	#  not handling install go, node, yarn, temurin on Lunix currently
+	if [ "$OS" == "Darwin" ]; then
+		brew install go node yarn temurin || true
+	fi
 
+	# install rust
 	if ! which rustup >/dev/null 2>&1; then
 		curl https://sh.rustup.rs -sSf | sh -s -- -y
 		source ~/.cargo/env
@@ -80,12 +88,12 @@ install_languages() {
 
 		# Rust toolchains and commands
 		rustup component add clippy
-		rustup target add aarch64-apple-ios armv7-apple-ios x86_64-apple-ios
+		rustup target add aarch64-apple-ios x86_64-apple-ios
 		rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android
 		rustup target add wasm32-unknown-unknown
 
 		# Install sccache
-		cargo install sccache --git https://github.com/paritytech/sccache.git
+		cargo install sccache
 	else
 		rustup update
 	fi
@@ -94,12 +102,26 @@ install_languages() {
 }
 
 install_tools() {
-	brew install kubectx hub google-cloud-sdk visual-studio-code || true
+	#  not handling discord, google-cloud-sdk, google-chrome, nvm, android-commandlinetools, ganache on Lunix currently
+	if [ "$OS" == "Darwin" ]; then
+		brew install thefuck tmux kubectx discord rectangle hub google-cloud-sdk visual-studio-code google-chrome nvm android-commandlinetools gh bat eza peco ganache kdash || true
+	elif [ "$OS" == "Linux" ]; then
+		sudo apt install tmux kubectx hub code gh bat eza peco ganache kdash
+	fi
 
-	rm -rf ~/Library/Application\ Support/Code/User/keybindings.json
-	rm -rf ~/Library/Application\ Support/Code/User/settings.json
-	mkdir -p ~/Library/Application\ Support/Code/User
+
+	# vscode setting
+	rm ~/Library/Application\ Support/Code/User/keybindings.json
+	rm ~/Library/Application\ Support/Code/User/settings.json
+	mkdir ~/Library/Application\ Support/Code/User
 	cp vscode/* ~/Library/Application\ Support/Code/User/
+
+	# tmux-conf setting
+	cp  tmux/.tmux.conf ~/
+	cp  tmux/.tmux.conf.local  ~/
+
+	# vim setting
+	cp vim/.vimrc ~/
 }
 
 setup_git() {
@@ -108,7 +130,11 @@ setup_git() {
 	git config --global alias.br branch
 	git config --global alias.com commit
 	git config --global alias.st status
-	git config --global credential.helper osxkeychain
+	if [ "$OS" == "Darwin" ]; then
+    git config --global credential.helper osxkeychain
+	elif [ "$OS" == "Linux" ]; then
+		git config --global credential.helper cache
+	fi
 	# Updated git requires a way to resolve divergent, this makes it so divergent branch pulls
 	# will only fast foward.  A diveragent branch will fail.  A normal thing to do is to pull a
 	# into your working copy, such as "git pull origin master".  A divergence can occur if the
@@ -199,7 +225,7 @@ get_arch() {
 
 downloader() {
 	local _dld
-	if check_cmd curl; then
+	if check_cmd curl; then	
 		_dld=curl
 	elif check_cmd wget; then
 		_dld=wget
