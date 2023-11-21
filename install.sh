@@ -115,7 +115,9 @@ install_tools() {
 	if [ "$OS" == "Darwin" ]; then
 		brew install thefuck tmux kubectx discord rectangle hub google-cloud-sdk visual-studio-code google-chrome nvm android-commandlinetools gh bat eza peco ganache kdash || true
 	elif [ "$OS" == "Linux" ]; then
-		sudo apt install tmux kubectx hub code gh bat peco
+		sudo apt install tmux hub gh bat peco
+		# install kubectx
+		sudo snap install kubectx code
 		# install nvm
 		curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
 		# install eza kdash
@@ -123,6 +125,7 @@ install_tools() {
 	fi
 
 
+	#TODO LINUX
 	# vscode setting
 	rm ~/Library/Application\ Support/Code/User/keybindings.json
 	rm ~/Library/Application\ Support/Code/User/settings.json

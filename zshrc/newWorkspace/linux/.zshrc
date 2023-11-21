@@ -5,7 +5,7 @@ toilet -F gay Leonz
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH="/Users/leonz/.oh-my-zsh"
+export ZSH="$HOME/.oh-my-zsh"
 
 # Nvm
 export NVM_DIR="$HOME/.nvm"
@@ -83,8 +83,6 @@ plugins=(
         git
         zsh-autosuggestions
 )
-
-source $ZSH/oh-my-zsh.sh
 
 # User configuration
 
