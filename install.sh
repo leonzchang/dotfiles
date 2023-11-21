@@ -32,7 +32,9 @@ install_pkgmanager() {
 		fi
 	elif [ "$OS" == "Linux" ]; then
 		# Linux
-    	sudo apt update	
+    	sudo apt update
+		# dependencies for installing sccache on Linux
+		sudo apt install build-essential libssl-dev pkg-config
 	else
 		echo "Unsupported operating system: $OS"
 	fi
@@ -65,9 +67,14 @@ install_shell() {
 	#zsh-autosuggestions
 	git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 
-    	#zshrc setting
-	cp  zshrc/newWorkspace/.zshrc ~/
-	
+    #zshrc setting
+	if [ "$OS" == "Darwin" ]; then
+		cp  zshrc/newWorkspace/mac/.zshrc ~/
+	elif [ "$OS" == "Linux" ]; then
+		cp  zshrc/newWorkspace/linux/.zshrc ~/
+	fi
+	source ~/.zshrc
+
 	#add brew to Path
 	if [ "$OS" == "Darwin" ]; then
 		echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/leonz/.zprofile
