@@ -114,6 +114,12 @@ install_tools() {
 	#  not handling discord, google-cloud-sdk, google-chrome, nvm, android-commandlinetools, ganache on Lunix currently
 	if [ "$OS" == "Darwin" ]; then
 		brew install thefuck tmux kubectx discord rectangle hub google-cloud-sdk visual-studio-code google-chrome nvm android-commandlinetools gh bat eza peco ganache kdash || true
+		
+		# vscode setting
+		rm ~/Library/Application\ Support/Code/User/keybindings.json
+		rm ~/Library/Application\ Support/Code/User/settings.json
+		mkdir ~/Library/Application\ Support/Code/User
+		cp vscode/* ~/Library/Application\ Support/Code/User/
 	elif [ "$OS" == "Linux" ]; then
 		sudo apt install tmux hub gh bat peco
 		# install kubectx
@@ -122,15 +128,10 @@ install_tools() {
 		curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
 		# install eza kdash
 		cargo install eza kdash
+
+		#TODO LINUX vscode config setting
 	fi
 
-
-	#TODO LINUX
-	# vscode setting
-	rm ~/Library/Application\ Support/Code/User/keybindings.json
-	rm ~/Library/Application\ Support/Code/User/settings.json
-	mkdir ~/Library/Application\ Support/Code/User
-	cp vscode/* ~/Library/Application\ Support/Code/User/
 
 	# tmux-conf setting
 	cp  tmux/.tmux.conf ~/

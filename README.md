@@ -11,3 +11,4 @@ sudo ./install.sh
 - not handling on Linux
     - languages: `go, node, yarn, temurin`
     - tools:`discord, google-cloud-sdk, google-chrome, android-commandlinetools, ganache`
+        - vscode config setting
