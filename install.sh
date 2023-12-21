@@ -2,7 +2,7 @@
 set -e
 ROOT_PATH=$(pwd -P)
 OS=$(uname -s)
-
+VSCODE_EXTENSIONS="./vscode-extensions/extensions.txt"
 
 #! https://dev.to/joaovitor/exa-instead-of-ls-1onl
 
@@ -16,6 +16,7 @@ main() {
 	install_shell
 	install_languages
 	install_tools
+	install_vscode_extensions
 	setup_git
 }
 
@@ -78,7 +79,7 @@ install_shell() {
 	#add brew to Path
 	if [ "$OS" == "Darwin" ]; then
 		echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/leonz/.zprofile
-			eval "$(/opt/homebrew/bin/brew shellenv)"
+		eval "$(/opt/homebrew/bin/brew shellenv)"
 	fi
 	
 }
@@ -124,12 +125,11 @@ install_tools() {
 		sudo apt install tmux hub gh bat peco
 		# install kubectx
 		sudo snap install kubectx code
+		#TODO LINUX vscode config setting
 		# install nvm
 		curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
 		# install eza kdash
 		cargo install eza kdash
-
-		#TODO LINUX vscode config setting
 	fi
 
 
@@ -141,6 +141,22 @@ install_tools() {
 	cp vim/.vimrc ~/
 }
 
+install_vscode_extensions() {
+	# Check if the file exists
+	if [ ! -f "$VSCODE_EXTENSIONS" ]; then
+		echo "vscode extensions file not found!"
+		exit 1
+	fi
+
+	# Read the file line by line and install each extension and hanlde last line doesn't end with a newline
+	# See https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_206
+	while IFS= read -r line || [ -n "$line" ]; do
+		code --install-extension "$line"
+	done < "$VSCODE_EXTENSIONS"
+
+	echo "Extensions installed successfully!"
+}
+
 setup_git() {
 	# git settings/aliases
 	git config --global alias.co checkout
@@ -148,7 +164,7 @@ setup_git() {
 	git config --global alias.com commit
 	git config --global alias.st status
 	if [ "$OS" == "Darwin" ]; then
-    git config --global credential.helper osxkeychain
+    	git config --global credential.helper osxkeychain
 	elif [ "$OS" == "Linux" ]; then
 		git config --global credential.helper cache
 	fi
