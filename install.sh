@@ -28,12 +28,12 @@ install_pkgmanager() {
 			/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 
 			# add homebrew to ~/.bashrc
-			echo "export PATH=/opt/homebrew/bin:$PATH" >> ~/.bashrc
+			echo "export PATH=/opt/homebrew/bin:$PATH" >>~/.bashrc
 			source ~/.bashrc
 		fi
 	elif [ "$OS" == "Linux" ]; then
 		# Linux
-    	sudo apt update
+		sudo apt update
 		# dependencies for installing sccache on Linux
 		sudo apt install build-essential libssl-dev pkg-config
 	else
@@ -68,26 +68,26 @@ install_shell() {
 	#zsh-autosuggestions
 	git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 
-    #zshrc setting
+	#zshrc setting
 	if [ "$OS" == "Darwin" ]; then
-		cp  zshrc/newWorkspace/mac/.zshrc ~/
+		cp zshrc/newWorkspace/mac/.zshrc ~/
 	elif [ "$OS" == "Linux" ]; then
-		cp  zshrc/newWorkspace/linux/.zshrc ~/
+		cp zshrc/newWorkspace/linux/.zshrc ~/
 	fi
 	source ~/.zshrc
 
 	#add brew to Path
 	if [ "$OS" == "Darwin" ]; then
-		echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/leonz/.zprofile
+		echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >>/Users/leonz/.zprofile
 		eval "$(/opt/homebrew/bin/brew shellenv)"
 	fi
-	
+
 }
 
 install_languages() {
-	#  not handling install go, node, yarn, temurin on Lunix currently
+	#  not handling install go, node, yarn on Lunix currently
 	if [ "$OS" == "Darwin" ]; then
-		brew install go node yarn temurin || true
+		brew install go node yarn || true
 	fi
 
 	# install rust
@@ -98,8 +98,6 @@ install_languages() {
 
 		# Rust toolchains and commands
 		rustup component add clippy
-		rustup target add aarch64-apple-ios x86_64-apple-ios
-		rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android
 		rustup target add wasm32-unknown-unknown
 
 		# Install sccache
@@ -112,10 +110,11 @@ install_languages() {
 }
 
 install_tools() {
-	#  not handling discord, google-cloud-sdk, google-chrome, nvm, android-commandlinetools, ganache on Lunix currently
+	#  not handling discord, google-cloud-sdk, google-chrome, nvm on Lunix currently
 	if [ "$OS" == "Darwin" ]; then
-		brew install thefuck tmux kubectx discord rectangle hub google-cloud-sdk visual-studio-code google-chrome nvm android-commandlinetools gh bat eza peco ganache kdash || true
-		
+		brew tap kdash-rs/kdash
+		brew install thefuck tmux kubectx discord rectangle hub google-cloud-sdk visual-studio-code google-chrome nvm gh bat eza peco kdash gnupg || true
+
 		# vscode setting
 		rm ~/Library/Application\ Support/Code/User/keybindings.json
 		rm ~/Library/Application\ Support/Code/User/settings.json
@@ -132,10 +131,9 @@ install_tools() {
 		cargo install eza kdash
 	fi
 
-
 	# tmux-conf setting
-	cp  tmux/.tmux.conf ~/
-	cp  tmux/.tmux.conf.local  ~/
+	cp tmux/.tmux.conf ~/
+	cp tmux/.tmux.conf.local ~/
 
 	# vim setting
 	cp vim/.vimrc ~/
@@ -152,7 +150,7 @@ install_vscode_extensions() {
 	# See https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_206
 	while IFS= read -r line || [ -n "$line" ]; do
 		code --install-extension "$line"
-	done < "$VSCODE_EXTENSIONS"
+	done <"$VSCODE_EXTENSIONS"
 
 	echo "Extensions installed successfully!"
 }
@@ -164,7 +162,7 @@ setup_git() {
 	git config --global alias.com commit
 	git config --global alias.st status
 	if [ "$OS" == "Darwin" ]; then
-    	git config --global credential.helper osxkeychain
+		git config --global credential.helper osxkeychain
 	elif [ "$OS" == "Linux" ]; then
 		git config --global credential.helper cache
 	fi
@@ -258,7 +256,7 @@ get_arch() {
 
 downloader() {
 	local _dld
-	if check_cmd curl; then	
+	if check_cmd curl; then
 		_dld=curl
 	elif check_cmd wget; then
 		_dld=wget

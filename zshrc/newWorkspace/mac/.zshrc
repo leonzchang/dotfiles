@@ -7,19 +7,10 @@ toilet -F gay Leonz
 # Path to your oh-my-zsh installation.
 export ZSH="/Users/leonz/.oh-my-zsh"
 
-# java for wallet-mobile repository
-export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
-# Android sdk
-export ANDROID_HOME=$HOMEBREW_PREFIX/share/android-commandlinetools
-export PATH=$PATH:$ANDROID_HOME/emulator
-export PATH=$PATH:$ANDROID_HOME/tools
-export PATH=$PATH:$ANDROID_HOME/tools/bin
-export PATH=$PATH:$ANDROID_HOME/platform-tools
-
 # Nvm
 export NVM_DIR="$HOME/.nvm"
-    [ -s "$(brew --prefix)/opt/nvm/nvm.sh" ] && \. "$(brew --prefix)/opt/nvm/nvm.sh" # This loads nvm
-    [ -s "$(brew --prefix)/opt/nvm/etc/bash_completion.d/nvm" ] && \. "$(brew --prefix)/opt/nvm/etc/bash_completion.d/nvm" # This loads nvm bash_completion
+[ -s "$(brew --prefix)/opt/nvm/nvm.sh" ] && \. "$(brew --prefix)/opt/nvm/nvm.sh"                                       # This loads nvm
+[ -s "$(brew --prefix)/opt/nvm/etc/bash_completion.d/nvm" ] && \. "$(brew --prefix)/opt/nvm/etc/bash_completion.d/nvm" # This loads nvm bash_completion
 
 # thefuck normal mode setting with alias
 eval $(thefuck --alias)
@@ -91,8 +82,8 @@ ZSH_THEME="agnoster"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-        git
-        zsh-autosuggestions
+    git
+    zsh-autosuggestions
 )
 
 source $ZSH/oh-my-zsh.sh
