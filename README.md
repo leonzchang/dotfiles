@@ -12,3 +12,4 @@ sudo ./install.sh
     - languages: `go, node, yarn, temurin`
     - tools:`discord, google-cloud-sdk, google-chrome, android-commandlinetools, ganache`
         - vscode config setting
+- script for setup powerlevel10k
