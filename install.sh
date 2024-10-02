@@ -113,7 +113,11 @@ install_tools() {
 	#  not handling discord, google-cloud-sdk, google-chrome, nvm on Lunix currently
 	if [ "$OS" == "Darwin" ]; then
 		brew tap kdash-rs/kdash
-		brew install thefuck tmux kubectx discord rectangle hub google-cloud-sdk visual-studio-code google-chrome nvm gh bat eza peco kdash gnupg || true
+		brew install thefuck tmux kubectx discord rectangle hub google-cloud-sdk visual-studio-code google-chrome nvm gh bat eza peco kdash gnupg pinentry-mac || true
+
+		# setup pinentry-mac
+		echo "pinentry-program $(which pinentry-mac)" >>~/.gnupg/gpg-agent.conf
+		killall gpg-agent
 
 		# vscode setting
 		rm ~/Library/Application\ Support/Code/User/keybindings.json
