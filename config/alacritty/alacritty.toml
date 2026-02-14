@@ -1,0 +1,86 @@
+# Alacritty Configuration (TOML)
+
+[window]
+padding = { x = 0, y = 0 }
+dynamic_padding = false
+decorations = "full"
+startup_mode = "Windowed"
+dynamic_title = true
+
+[scrolling]
+history = 10000
+multiplier = 3
+
+[font]
+size = 12.0
+
+[font.normal]
+family = "MesloLGM Nerd Font"
+style = "Regular"
+
+[font.bold]
+family = "MesloLGM Nerd Font"
+style = "Bold"
+
+[font.italic]
+family = "MesloLGM Nerd Font"
+style = "Italic"
+
+[font.bold_italic]
+family = "MesloLGM Nerd Font"
+style = "Bold Italic"
+
+# MacOS thin strokes
+[font.offset]
+x = 0
+y = 0
+
+[colors]
+# Base16 Gruvbox dark, pale
+# Default colors
+[colors.primary]
+background = "#262626"
+foreground = "#dab997"
+
+[colors.cursor]
+text = "#262626"
+cursor = "#dab997"
+
+[colors.normal]
+black = "#262626"
+red = "#d75f5f"
+green = "#afaf00"
+yellow = "#ffaf00"
+blue = "#83adad"
+magenta = "#d485ad"
+cyan = "#85ad85"
+white = "#dab997"
+
+[colors.bright]
+black = "#8a8a8a"
+red = "#ff8700"
+green = "#3a3a3a"
+yellow = "#4e4e4e"
+blue = "#949494"
+magenta = "#d5c4a1"
+cyan = "#d65d0e"
+white = "#ebdbb2"
+
+[bell]
+animation = "EaseOutExpo"
+duration = 0
+color = "#ffffff"
+
+[selection]
+save_to_clipboard = false
+
+[cursor]
+style = "Block"
+unfocused_hollow = true
+
+[shell]
+program = "/bin/zsh"
+args = ["--login"]
+
+[mouse]
+hide_when_typing = false

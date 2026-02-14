@@ -1,0 +1,78 @@
+{
+  "python.defaultInterpreterPath": "${workspaceFolder}/py/.venv/bin/python",
+  "css.customData": [
+    ".vscode/tailwind.json"
+  ],
+  "css.validate": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.fixAll.prettier": "explicit",
+    "source.fixAll.markdownlint": "explicit",
+    "source.organizeImports": "explicit",
+    "source.sortMembers": "explicit"
+  },
+  "editor.formatOnSave": true,
+  "editor.inlineSuggest.enabled": true,
+  "editor.minimap.enabled": true,
+  "editor.stickyTabStops": true,
+  "editor.tabSize": 2,
+  "editor.tokenColorCustomizations": {
+    "textMateRules": [
+      {
+        "name": "Comment",
+        "scope": [
+          "comment",
+          "comment.block",
+          "comment.block.documentation",
+          "comment.line",
+          "comment.line.double-slash",
+          "punctuation.definition.comment"
+        ],
+        "settings": {
+          "fontStyle": "italic"
+        }
+      }
+    ]
+  },
+  "editor.wordWrap": "on",
+  "eslint.experimental.useFlatConfig": true,
+  "files.associations": {
+    "*.rs": "rust"
+  },
+  "files.autoSave": "onFocusChange",
+  "json.schemaDownload.enable": false,
+  "nixEnvSelector.suggestion": false,
+  "rust-analyzer.check.overrideCommand": [
+    "cargo-clippy",
+    "--all-targets",
+    "--workspace",
+    "--message-format=json"
+  ],
+  "terminal.integrated.suggest.enabled": true,
+  "workbench.activityBar.orientation": "vertical",
+  "workbench.editor.customLabels.patterns": {
+    "**/Cargo.toml": "${dirname} (Cargo.toml)",
+    "**/index.*": "${dirname} (index)",
+    "**/layout.tsx": "${dirname} (layout)",
+    "**/lib.*": "${dirname} (lib)",
+    "**/mod.*": "${dirname} (mod)",
+    "**/page.tsx": "${dirname} (page)"
+  },
+  "[css][javascript][json][typescript][typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+  },
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.tabSize": 4
+  },
+  "[rust]": {
+    "editor.defaultFormatter": "rust-lang.rust-analyzer",
+    "editor.tabSize": 4
+  },
+  "[toml]": {
+    "editor.defaultFormatter": "tamasfe.even-better-toml"
+  }
+}
